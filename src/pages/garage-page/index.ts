@@ -1,17 +1,15 @@
 import { PageController } from '../../interfaces/pageController';
-import Garage from './garage';
+import ApiService from '../../service/api-service';
+import GaragePage from './garage';
 
-export default class GaragePage implements PageController {
+export default class Garage implements PageController {
   private readonly root: HTMLElement;
 
-  private readonly view: Garage;
+  private readonly view: GaragePage;
 
-  constructor(root: HTMLElement) {
+  constructor(root: HTMLElement, service: ApiService) {
     this.root = root;
-    this.view = new Garage({
-      className: 'garage',
-      parent: this.root,
-    });
+    this.view = new GaragePage('garage', this.root, service);
   }
 
   public createPage(): void {
