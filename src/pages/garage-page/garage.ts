@@ -14,7 +14,18 @@ class GaragePage extends BaseComponent {
   constructor(className: string, parent: HTMLElement, service: ApiService) {
     super({ tag: 'div', className, parent });
     this.formCreate = new CreateForm(this.node, 'Create');
+    this.formCreate.addListener('click', (event?: Event) => {
+      const target = event?.target as HTMLInputElement;
+      if (target.type === 'button') {
+        service
+          .createCar(this.formCreate.submit())
+          .then((resp) => this.section.append(new Car(resp).getNode()));
+      }
+    });
     this.formRename = new CreateForm(this.node, 'Update', true);
+    this.formRename.addListener('click', () =>
+      console.log(this.formCreate.submit())
+    );
     this.section = new BaseComponent({ tag: 'section', parent: this });
     service.getCars().then((resp) =>
       resp.forEach((car: CarData) => {

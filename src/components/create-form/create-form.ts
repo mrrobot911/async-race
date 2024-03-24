@@ -19,4 +19,8 @@ export default class CreateForm extends BaseComponent<'form'> {
   toggleDisabled(value: boolean) {
     this.submitNewCar.toggleDisabled(value);
   }
+
+  submit() {
+    return { name: this.carName.getValue(), color: this.carColor.getValue() };
+  }
 }
