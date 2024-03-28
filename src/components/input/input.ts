@@ -37,7 +37,6 @@ export default class Input extends BaseComponent<'input'> {
 
   constructor(
     type: HTMLInputTypeAttribute,
-    isDisabled = false,
     defaultValue = '',
     classlist: string[] = [],
     placeholder = ''
@@ -51,7 +50,6 @@ export default class Input extends BaseComponent<'input'> {
     this.setAttribute('type', this.type);
     this.setAttribute('placeholder', this.placeholder);
     this.setAttribute('value', this.defaultValue);
-    this.toggleDisabled(isDisabled);
     this.addListener('input', (event?: Event) => {
       const target = event?.target as HTMLInputElement;
       this.value = target.value;
@@ -65,13 +63,5 @@ export default class Input extends BaseComponent<'input'> {
   setValue(value: string) {
     this.value = value;
     this.setAttribute('value', value);
-  }
-
-  toggleDisabled(isDisabled: boolean): void {
-    if (isDisabled) {
-      this.setAttribute('disabled', 'true');
-    } else {
-      this.removeAttribute('disabled');
-    }
   }
 }

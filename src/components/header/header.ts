@@ -1,15 +1,15 @@
 import BaseComponent from '../baseComponent';
-import Link from '../link/link';
+import Button from '../button/button';
 
 export default class Header extends BaseComponent<'header'> {
-  private readonly garageLink: Link;
+  private readonly garageLink: Button;
 
-  private readonly scoreLink: Link;
+  private readonly scoreLink: Button;
 
   constructor(className: string, parent: HTMLElement) {
     super({ tag: 'header', className, parent });
-    this.garageLink = new Link('Garage', '#garage');
-    this.scoreLink = new Link('Score', '#score');
+    this.garageLink = new Button('Garage', true);
+    this.scoreLink = new Button('Score');
     this.appendChildren([this.garageLink, this.scoreLink]);
   }
 }

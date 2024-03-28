@@ -6,10 +6,15 @@ export default class ApiService {
   private readonly baseURL: string;
 
   constructor() {
-    if (!ApiService.instance) {
-      ApiService.instance = this;
-    }
     this.baseURL = import.meta.env.VITE_FETCH_URL;
+  }
+
+  public static getInstance(): ApiService {
+    if (!ApiService.instance) {
+      ApiService.instance = new ApiService();
+    }
+
+    return ApiService.instance;
   }
 
   public async getCars() {
@@ -45,7 +50,7 @@ export default class ApiService {
     }
   }
 
-  public async updateCar(value: CarData) {
+  public async updateCar(value: Partial<CarData>) {
     try {
       const response = await fetch(`${this.baseURL}/garage/${value.id}`, {
         method: 'PUT',

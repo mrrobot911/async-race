@@ -1,7 +1,7 @@
 import BaseComponent from '../components/baseComponent';
 import Header from '../components/header/header';
-import Garage from '../pages/garage-page/garage';
 import ApiService from '../service/api-service';
+import Garage from './garage-page-controller';
 
 export default class Controller extends BaseComponent {
   private readonly appRoot: BaseComponent;
@@ -14,13 +14,13 @@ export default class Controller extends BaseComponent {
 
   constructor() {
     super({ className: 'app' });
-    this.service = new ApiService();
+    this.service = ApiService.getInstance();
     this.appRoot = new BaseComponent({ className: 'page' });
     this.header = new Header('header', this.node);
-    this.garage = new Garage('section', this.node, this.service);
+    this.garage = new Garage(this.appRoot.getNode());
 
-    this.appRoot.append(this.header.getNode());
-    this.appRoot.append(this.garage.getNode());
+    this.garage.createPage();
+    this.append(this.header.getNode());
 
     this.appendChildren([this.appRoot]);
   }

@@ -6,18 +6,19 @@ export default class CreateForm extends BaseComponent<'form'> {
 
   private readonly carColor: Input;
 
-  private readonly submitNewCar: Input;
+  private readonly submitCar: Input;
 
-  constructor(parent: HTMLElement, name: string, isDisabled = false) {
+  constructor(parent: HTMLElement, name: string, className: string) {
     super({ parent, className: 'create-car', tag: 'form' });
-    this.carName = new Input('text', isDisabled);
+    this.carName = new Input('text');
     this.carColor = new Input('color');
-    this.submitNewCar = new Input('button', isDisabled, name);
-    this.appendChildren([this.carName, this.carColor, this.submitNewCar]);
+    this.submitCar = new Input('button', name);
+    this.addClass(className);
+    this.appendChildren([this.carName, this.carColor, this.submitCar]);
   }
 
-  toggleDisabled(value: boolean) {
-    this.submitNewCar.toggleDisabled(value);
+  returnButtonElement() {
+    return this.submitCar;
   }
 
   submit() {

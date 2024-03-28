@@ -1,4 +1,4 @@
-import Controller from '../controllers/controller';
+import Controller from '../controllers/app-controller';
 
 class App {
   private readonly controller: Controller;
