@@ -21,6 +21,18 @@ export default class CreateForm extends BaseComponent<'form'> {
     return this.submitCar;
   }
 
+  disabled(flag: boolean) {
+    if (flag) {
+      this.carName.setAttribute('disabled', 'true');
+      this.carColor.setAttribute('disabled', 'true');
+      this.submitCar.setAttribute('disabled', 'true');
+    } else {
+      this.carName.removeAttribute('disabled');
+      this.carColor.removeAttribute('disabled');
+      this.submitCar.removeAttribute('disabled');
+    }
+  }
+
   submit() {
     return { name: this.carName.getValue(), color: this.carColor.getValue() };
   }

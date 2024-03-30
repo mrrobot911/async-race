@@ -10,7 +10,7 @@ export default class CreateCarService {
 
   constructor() {
     this.createCarObserver = new EventObserver<number>();
-    this.activeButtonId = 0;
+    this.activeButtonId = 0; // реализовать изменения состояния в сервисе
   }
 
   public static getInstance(): CreateCarService {

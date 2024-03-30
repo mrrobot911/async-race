@@ -14,7 +14,8 @@ class EventObserver<Listener> {
   }
 
   notify(data: Listener): void {
-    const observersArray = Array.from(this.observers);
+    // нейминг data
+    const observersArray = Array.from(this.observers); // на подумать
     const { length } = observersArray;
     for (let i = 0; i < length; i += 1) {
       observersArray[i](data);

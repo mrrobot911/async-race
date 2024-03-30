@@ -6,29 +6,24 @@ import { CarData } from '../interfaces/cars';
 import CreateCarService from '../service/createCar-service';
 
 export default class GarageController implements PageController {
-  private readonly view: GaragePage;
+  private readonly view: GaragePage = new GaragePage(this.root, 'garage');
 
   private readonly service: ApiService;
 
   private readonly carService: CreateCarService;
 
-  private toggleUpdateBtn: boolean;
+  private toggleUpdateBtn: boolean = false;
 
-  private carID: number;
+  private carID: number = 0;
 
   constructor(private readonly root: HTMLElement) {
-    this.root = root;
-    this.view = new GaragePage(this.root, 'garage');
     this.service = ApiService.getInstance();
     this.view.getChildren();
-    this.renderData();
+    this.renderCar();
+    this.addListenerToCreateForm();
+    this.addListenerToEditeForm();
     this.carService = CreateCarService.getInstance();
-    this.toggleUpdateBtn = false;
-    this.carID = 0;
-    this.view
-      .getRenameForm()
-      .returnButtonElement()
-      .setAttribute('disabled', 'true');
+    this.view.getRenameForm().disabled(true);
     this.subscribe();
   }
 
@@ -37,28 +32,20 @@ export default class GarageController implements PageController {
       if (this.carID === value) {
         this.toggleUpdateBtn = !this.toggleUpdateBtn;
         if (this.toggleUpdateBtn) {
-          this.view
-            .getRenameForm()
-            .returnButtonElement()
-            .setAttribute('disabled', 'true');
+          this.view.getRenameForm().disabled(true);
         } else {
-          this.view
-            .getRenameForm()
-            .returnButtonElement()
-            .removeAttribute('disabled');
+          this.view.getRenameForm().disabled(false);
         }
       } else {
-        this.view
-          .getRenameForm()
-          .returnButtonElement()
-          .removeAttribute('disabled');
+        this.view.getRenameForm().disabled(false);
+        this.toggleUpdateBtn = false;
       }
       this.carID = value;
     });
   }
 
-  renderData() {
-    this.service.getCars().then((resp) => {
+  renderCar() {
+    this.service.manageCars('GET').then((resp) => {
       resp.forEach((car: CarData) => {
         const carEl = new Car(car);
         this.carService.subscribeButton(
@@ -68,21 +55,38 @@ export default class GarageController implements PageController {
         this.view.getGarage().append(carEl);
       });
     });
+  }
+
+  addListenerToCreateForm() {
     this.view.getRegForm().addListener('click', (event?: Event) => {
       const target = event?.target as HTMLInputElement;
       if (target.type === 'button') {
         this.service
-          .createCar(this.view.getRegForm().submit())
+          .manageCars('POST', this.view.getRegForm().submit())
           .then((resp) => this.view.getGarage().append(new Car(resp)));
       }
     });
+  }
+
+  addListenerToEditeForm() {
     this.view
       .getRenameForm()
       .returnButtonElement()
       .addListener('click', () => {
-        // const { name, color } = this.view.getRegForm().submit();
-        // this.service.updateCar({ id: this.carID, name, color });
-        console.log(this.carID);
+        const { name, color } = this.view.getRenameForm().submit();
+        const sendData: Partial<CarData> = { id: this.carID };
+        if (name) sendData.name = name;
+        if (color) sendData.color = color;
+        this.service.manageCars('PUT', sendData).then((resp) =>
+          this.view
+            .getGarage()
+            .getChildren()
+            .forEach((car) => {
+              if (car instanceof Car && car.getCarID() === this.carID) {
+                car.updateCarData(resp);
+              }
+            })
+        );
       });
   }
 

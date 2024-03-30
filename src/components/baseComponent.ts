@@ -18,14 +18,14 @@ export default class BaseComponent<
 
   constructor({
     parent,
-    tag,
-    className,
-    content,
+    tag = 'div' as T,
+    className = '',
+    content = '',
     children,
   }: Component<T, 'div'>) {
-    const node = document.createElement(tag ?? ('div' as T));
-    node.className = className ?? '';
-    node.textContent = content ?? '';
+    const node = document.createElement(tag);
+    node.className = className;
+    node.textContent = content;
     this.node = node;
     if (parent) {
       parent.append(node);

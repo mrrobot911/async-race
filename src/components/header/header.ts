@@ -8,7 +8,7 @@ export default class Header extends BaseComponent<'header'> {
 
   constructor(className: string, parent: HTMLElement) {
     super({ tag: 'header', className, parent });
-    this.garageLink = new Button('Garage', true);
+    this.garageLink = new Button('Garage');
     this.scoreLink = new Button('Score');
     this.appendChildren([this.garageLink, this.scoreLink]);
   }

@@ -1,0 +1,14 @@
+.car-element {
+  margin: 30px 20px;
+  border: 1px solid grey;
+}
+
+.car-manager {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.car-name {
+  display: inline;
+}
