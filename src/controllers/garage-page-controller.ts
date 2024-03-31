@@ -51,7 +51,7 @@ export default class GarageController implements PageController {
         const carEl = new CarController(this.view.getGarage(), car);
         this.carService.subscribeButton(
           carEl.getCar().getSelectCarButton(),
-          carEl.getCar().getCarID()
+          carEl.getCar()
         );
       });
     });

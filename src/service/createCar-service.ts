@@ -1,4 +1,5 @@
 import Button from '../components/button/button';
+import Car from '../components/car/car';
 import EventObserver from '../helpers/observer';
 
 export default class CreateCarService {
@@ -20,9 +21,10 @@ export default class CreateCarService {
     return CreateCarService.instance;
   }
 
-  subscribeButton(button: Button, id: number): void {
+  subscribeButton(button: Button, root: Car): void {
     button.addListener('click', () => {
-      this.activeButtonId = id;
+      this.activeButtonId = root.getCarID();
+
       this.createCarObserver.notify(this.activeButtonId);
     });
   }
