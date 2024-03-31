@@ -1,14 +1,15 @@
 import { PageController } from '../interfaces/pageController';
-import ApiService from '../service/api-service';
+import ApiCarService from '../service/api-car-service';
 import GaragePage from '../pages/garage-page/garage';
 import Car from '../components/car/car';
 import { CarData } from '../interfaces/cars';
 import CreateCarService from '../service/createCar-service';
+import CarController from './car-controller';
 
 export default class GarageController implements PageController {
   private readonly view: GaragePage = new GaragePage(this.root, 'garage');
 
-  private readonly service: ApiService;
+  private readonly service: ApiCarService;
 
   private readonly carService: CreateCarService;
 
@@ -17,7 +18,7 @@ export default class GarageController implements PageController {
   private carID: number = 0;
 
   constructor(private readonly root: HTMLElement) {
-    this.service = ApiService.getInstance();
+    this.service = ApiCarService.getInstance();
     this.view.getChildren();
     this.renderCar();
     this.addListenerToCreateForm();
@@ -47,25 +48,26 @@ export default class GarageController implements PageController {
   renderCar() {
     this.service.manageCars('GET').then((resp) => {
       resp.forEach((car: CarData) => {
-        const carEl = new Car(car);
+        const carEl = new CarController(this.view.getGarage().getNode(), car);
         this.carService.subscribeButton(
-          carEl.getUpdateCarButton(),
-          carEl.getCarID()
+          carEl.getCar().getSelectCarButton(),
+          carEl.getCar().getCarID()
         );
-        this.view.getGarage().append(carEl);
       });
     });
   }
 
   addListenerToCreateForm() {
-    this.view.getRegForm().addListener('click', (event?: Event) => {
-      const target = event?.target as HTMLInputElement;
-      if (target.type === 'button') {
+    this.view
+      .getRegForm()
+      .returnButtonElement()
+      .addListener('click', () => {
         this.service
           .manageCars('POST', this.view.getRegForm().submit())
-          .then((resp) => this.view.getGarage().append(new Car(resp)));
-      }
-    });
+          .then(
+            (resp) => new CarController(this.view.getGarage().getNode(), resp)
+          );
+      });
   }
 
   addListenerToEditeForm() {

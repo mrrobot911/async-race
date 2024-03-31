@@ -15,7 +15,7 @@ export default class Car extends BaseComponent<'div'> {
 
   private readonly createCar: Button;
 
-  private readonly updateCar: Button;
+  private readonly removeCar: Button;
 
   private readonly carName: BaseComponent<'p'>;
 
@@ -34,7 +34,7 @@ export default class Car extends BaseComponent<'div'> {
       className: 'car-manager',
     });
     this.createCar = new Button('Select');
-    this.updateCar = new Button('Remove');
+    this.removeCar = new Button('Remove');
     this.carName = new BaseComponent({
       parent: this,
       content: car.name,
@@ -49,7 +49,7 @@ export default class Car extends BaseComponent<'div'> {
     this.img.setInnerHTML(createSvg(car.color));
     this.append(this.img);
     this.raceControlsContainer.append(this.createCar.getNode());
-    this.raceControlsContainer.append(this.updateCar.getNode());
+    this.raceControlsContainer.append(this.removeCar.getNode());
     this.raceControlsContainer.append(this.carName.getNode());
     this.append(this.controlsContainer.getNode());
     this.controlsContainer.append(this.startRace.getNode());
@@ -66,7 +66,19 @@ export default class Car extends BaseComponent<'div'> {
     if (car.color) this.img.setInnerHTML(createSvg(car.color));
   }
 
-  getUpdateCarButton() {
+  getSelectCarButton() {
     return this.createCar;
+  }
+
+  getDeleteCarButton() {
+    return this.removeCar;
+  }
+
+  getStartCarButton() {
+    return this.startRace;
+  }
+
+  getStopCarButton() {
+    return this.stopRace;
   }
 }

@@ -1,8 +1,8 @@
 import { CarData } from '../interfaces/cars';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
-export default class ApiService {
-  private static instance: ApiService;
+export default class ApiRaceService {
+  private static instance: ApiRaceService;
 
   private readonly baseURL: string;
 
@@ -10,16 +10,15 @@ export default class ApiService {
     this.baseURL = import.meta.env.VITE_FETCH_URL;
   }
 
-  public static getInstance(): ApiService {
-    if (!ApiService.instance) {
-      ApiService.instance = new ApiService();
+  public static getInstance(): ApiRaceService {
+    if (!ApiRaceService.instance) {
+      ApiRaceService.instance = new ApiRaceService();
     }
 
-    return ApiService.instance;
+    return ApiRaceService.instance;
   }
 
   public async manageCars(method: Method, value?: Partial<CarData>) {
-    // единая ответственность
     try {
       const response = await fetch(
         `${this.baseURL}/garage/${value?.id || ''}`,
