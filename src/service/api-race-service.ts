@@ -1,6 +1,3 @@
-import { CarData } from '../interfaces/cars';
-
-type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export default class ApiRaceService {
   private static instance: ApiRaceService;
 
@@ -18,14 +15,12 @@ export default class ApiRaceService {
     return ApiRaceService.instance;
   }
 
-  public async manageCars(method: Method, value?: Partial<CarData>) {
+  async engineManager(id: number, status: 'started' | 'stopped' | 'drive') {
     try {
       const response = await fetch(
-        `${this.baseURL}/garage/${value?.id || ''}`,
+        `${this.baseURL}/engine/?id=${id}&status=${status}`,
         {
-          method,
-          headers: { 'Content-type': 'application/json' },
-          body: JSON.stringify(value),
+          method: 'PATCH',
         }
       );
       if (!response.ok) {

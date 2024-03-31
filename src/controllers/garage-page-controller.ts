@@ -48,7 +48,7 @@ export default class GarageController implements PageController {
   renderCar() {
     this.service.manageCars('GET').then((resp) => {
       resp.forEach((car: CarData) => {
-        const carEl = new CarController(this.view.getGarage().getNode(), car);
+        const carEl = new CarController(this.view.getGarage(), car);
         this.carService.subscribeButton(
           carEl.getCar().getSelectCarButton(),
           carEl.getCar().getCarID()
@@ -64,9 +64,7 @@ export default class GarageController implements PageController {
       .addListener('click', () => {
         this.service
           .manageCars('POST', this.view.getRegForm().submit())
-          .then(
-            (resp) => new CarController(this.view.getGarage().getNode(), resp)
-          );
+          .then((resp) => new CarController(this.view.getGarage(), resp));
       });
   }
 
@@ -79,7 +77,7 @@ export default class GarageController implements PageController {
         const sendData: Partial<CarData> = { id: this.carID };
         if (name) sendData.name = name;
         if (color) sendData.color = color;
-        this.service.manageCars('PUT', sendData).then((resp) =>
+        this.service.manageCars('PUT', sendData).then((resp) => {
           this.view
             .getGarage()
             .getChildren()
@@ -87,8 +85,8 @@ export default class GarageController implements PageController {
               if (car instanceof Car && car.getCarID() === this.carID) {
                 car.updateCarData(resp);
               }
-            })
-        );
+            });
+        });
       });
   }
 

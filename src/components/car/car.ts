@@ -44,6 +44,7 @@ export default class Car extends BaseComponent<'div'> {
     this.id = car.id;
     this.startRace = new Button('Start');
     this.stopRace = new Button('Stop');
+    this.stopRace.setAttribute('disabled', 'true');
     this.append(this.raceControlsContainer.getNode());
     this.img = new BaseComponent({ parent: this, tag: 'object' });
     this.img.setInnerHTML(createSvg(car.color));
@@ -54,6 +55,8 @@ export default class Car extends BaseComponent<'div'> {
     this.append(this.controlsContainer.getNode());
     this.controlsContainer.append(this.startRace.getNode());
     this.controlsContainer.append(this.stopRace.getNode());
+    this.startButtonListener();
+    this.stopButtonListener();
   }
 
   getCarID() {
@@ -80,5 +83,19 @@ export default class Car extends BaseComponent<'div'> {
 
   getStopCarButton() {
     return this.stopRace;
+  }
+
+  startButtonListener() {
+    this.startRace.addListener('click', () => {
+      this.startRace.setAttribute('disabled', 'true');
+      this.stopRace.removeAttribute('disabled');
+    });
+  }
+
+  stopButtonListener() {
+    this.stopRace.addListener('click', () => {
+      this.stopRace.setAttribute('disabled', 'true');
+      this.startRace.removeAttribute('disabled');
+    });
   }
 }
