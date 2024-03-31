@@ -47,6 +47,7 @@ export default class Car extends BaseComponent<'div'> {
     this.stopRace.setAttribute('disabled', 'true');
     this.append(this.raceControlsContainer.getNode());
     this.img = new BaseComponent({ parent: this, tag: 'object' });
+    this.img.setClassname('car');
     this.img.setInnerHTML(createSvg(car.color));
     this.append(this.img);
     this.raceControlsContainer.append(this.createCar.getNode());
@@ -83,6 +84,10 @@ export default class Car extends BaseComponent<'div'> {
 
   getStopCarButton() {
     return this.stopRace;
+  }
+
+  getCarImg() {
+    return this.img;
   }
 
   startButtonListener() {

@@ -9,6 +9,10 @@
   gap: 20px;
 }
 
+.car {
+  position: relative;
+}
+
 .car-name {
   display: inline;
 }

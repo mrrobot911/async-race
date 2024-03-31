@@ -34,6 +34,10 @@ export default class CreateForm extends BaseComponent<'form'> {
   }
 
   submit() {
-    return { name: this.carName.getValue(), color: this.carColor.getValue() };
+    const name = this.carName.getValue();
+    const color = this.carColor.getValue();
+    this.carName.getNode().value = '';
+    this.carColor.getNode().value = '';
+    return { name, color };
   }
 }
