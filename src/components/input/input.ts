@@ -27,8 +27,6 @@ export type HTMLInputTypeAttribute =
 export default class Input extends BaseComponent<'input'> {
   private type: HTMLInputTypeAttribute;
 
-  private classList: string[];
-
   private placeholder: string;
 
   private defaultValue: string;
@@ -38,12 +36,10 @@ export default class Input extends BaseComponent<'input'> {
   constructor(
     type: HTMLInputTypeAttribute,
     defaultValue = '',
-    classlist: string[] = [],
     placeholder = ''
   ) {
     super({ tag: 'input' });
     this.type = type;
-    this.classList = classlist;
     this.placeholder = placeholder;
     this.defaultValue = defaultValue;
     this.value = '';

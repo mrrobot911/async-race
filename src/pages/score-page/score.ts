@@ -31,19 +31,19 @@ export default class ScorePage extends BaseComponent {
     });
     this.headId = new BaseComponent({
       tag: 'th',
-      parent: this.headRow.getNode(),
       content: 'id',
     });
+    this.headRow.append(this.headId);
     this.headWins = new BaseComponent({
       tag: 'th',
-      parent: this.headRow.getNode(),
       content: 'wins',
     });
+    this.headRow.append(this.headWins);
     this.headTime = new BaseComponent({
       tag: 'th',
-      parent: this.headRow.getNode(),
       content: 'time',
     });
+    this.headRow.append(this.headTime);
     this.body = new BaseComponent({
       tag: 'tbody',
       parent: this.section.getNode(),

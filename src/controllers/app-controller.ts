@@ -1,6 +1,5 @@
 import BaseComponent from '../components/baseComponent';
 import Header from '../components/header/header';
-import ApiCarService from '../service/api-car-service';
 import GarageController from './garage-page-controller';
 import ScoreController from './score-page-controller';
 
@@ -12,8 +11,6 @@ export default class Controller extends BaseComponent {
   private readonly garage: GarageController;
 
   private readonly score: ScoreController;
-
-  private readonly service: ApiCarService = ApiCarService.getInstance();
 
   constructor() {
     super({ className: 'app' });
