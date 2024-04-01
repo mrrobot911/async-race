@@ -15,6 +15,10 @@ export default class CarController {
 
   private size: number = 0;
 
+  private distance: number = 1;
+
+  private interval: number = 0;
+
   constructor(
     private readonly root: BaseComponent<'section'>,
     private carData: CarData
@@ -31,6 +35,12 @@ export default class CarController {
   updateSize() {
     this.size = this.car.getNode().clientWidth;
     this.car.getCarFlag().setAttribute('style', `left: ${this.size - 250}px`);
+    this.car
+      .getCarImg()
+      .setAttribute(
+        'style',
+        `left: ${this.distance * (this.size / this.interval)}px`
+      );
   }
 
   getCar() {
@@ -49,12 +59,17 @@ export default class CarController {
       this.raceService
         .engineManager(this.car.getCarID(), 'started')
         .then((resp) => {
-          const interval = resp.distance / resp.velocity;
-          let distance = this.car.getNode().clientWidth / interval;
+          this.interval = resp.distance / resp.velocity;
           this.timer = setInterval(() => {
-            distance += this.size / interval;
-            this.car.getCarImg().setAttribute('style', `left: ${distance}px`);
-            if (distance >= this.size - 100) clearInterval(this.timer);
+            this.distance += 1;
+            this.car
+              .getCarImg()
+              .setAttribute(
+                'style',
+                `left: ${this.distance * (this.size / this.interval)}px`
+              );
+            if (this.distance * (this.size / this.interval) >= this.size - 100)
+              clearInterval(this.timer);
           }, 1);
         });
       this.raceService
@@ -63,12 +78,18 @@ export default class CarController {
     });
   }
 
+  clearSittings() {
+    clearInterval(this.timer);
+    this.distance = 0;
+    this.interval = 1;
+  }
+
   addListenerToStopBtn() {
     this.car.getStopCarButton().addListener('click', () => {
       this.raceService
         .engineManager(this.car.getCarID(), 'stopped')
         .then(() => {
-          clearInterval(this.timer);
+          this.clearSittings();
           this.car.getCarImg().removeAttribute('style');
         });
     });
