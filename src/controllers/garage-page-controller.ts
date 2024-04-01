@@ -9,21 +9,19 @@ import CarController from './car-controller';
 export default class GarageController implements PageController {
   private readonly view: GaragePage = new GaragePage(this.root, 'garage');
 
-  private readonly service: ApiCarService;
+  private readonly service: ApiCarService = ApiCarService.getInstance();
 
-  private readonly carService: CreateCarService;
+  private readonly carService: CreateCarService =
+    CreateCarService.getInstance();
 
   private toggleUpdateBtn: boolean = false;
 
   private carID: number = 0;
 
   constructor(private readonly root: HTMLElement) {
-    this.service = ApiCarService.getInstance();
-    this.view.getChildren();
     this.renderCar();
     this.addListenerToCreateForm();
     this.addListenerToEditeForm();
-    this.carService = CreateCarService.getInstance();
     this.view.getRenameForm().disabled(true);
     this.subscribe();
   }
@@ -94,7 +92,7 @@ export default class GarageController implements PageController {
     this.root.append(this.view.getNode());
   }
 
-  public destroyPage(): void {
-    this.view.destroy();
+  public removePage(): void {
+    this.view.remove();
   }
 }

@@ -1,27 +1,46 @@
 import BaseComponent from '../components/baseComponent';
 import Header from '../components/header/header';
 import ApiCarService from '../service/api-car-service';
-import Garage from './garage-page-controller';
+import GarageController from './garage-page-controller';
+import ScoreController from './score-page-controller';
 
 export default class Controller extends BaseComponent {
   private readonly appRoot: BaseComponent;
 
   private readonly header: Header;
 
-  private readonly garage: Garage;
+  private readonly garage: GarageController;
 
-  private readonly service: ApiCarService;
+  private readonly score: ScoreController;
+
+  private readonly service: ApiCarService = ApiCarService.getInstance();
 
   constructor() {
     super({ className: 'app' });
-    this.service = ApiCarService.getInstance();
     this.appRoot = new BaseComponent({ className: 'page' });
     this.header = new Header('header', this.node);
-    this.garage = new Garage(this.appRoot.getNode());
+    this.garage = new GarageController(this.appRoot.getNode());
+    this.score = new ScoreController(this.appRoot.getNode());
+    this.addGarageListener();
+    this.addScoreListener();
 
     this.garage.createPage();
     this.append(this.header.getNode());
 
-    this.appendChildren([this.appRoot]);
+    this.append(this.appRoot);
+  }
+
+  addGarageListener() {
+    this.header.getGarage().addListener('click', () => {
+      this.garage.createPage();
+      this.score.removePage();
+    });
+  }
+
+  addScoreListener() {
+    this.header.getScore().addListener('click', () => {
+      this.garage.removePage();
+      this.score.createPage();
+    });
   }
 }

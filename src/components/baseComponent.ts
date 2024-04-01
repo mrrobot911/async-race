@@ -130,4 +130,8 @@ export default class BaseComponent<
     this.destroyChildren();
     this.node.remove();
   }
+
+  public remove(): void {
+    this.node.remove();
+  }
 }

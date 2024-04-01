@@ -29,4 +29,12 @@ export default class Header extends BaseComponent<'header'> {
       this.garageLink.removeAttribute('disabled');
     });
   }
+
+  getGarage() {
+    return this.garageLink;
+  }
+
+  getScore() {
+    return this.scoreLink;
+  }
 }
