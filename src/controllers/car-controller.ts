@@ -13,6 +13,8 @@ export default class CarController {
 
   private timer: number = 0;
 
+  private size: number = 0;
+
   constructor(
     private readonly root: BaseComponent<'section'>,
     private carData: CarData
@@ -22,6 +24,13 @@ export default class CarController {
     this.addListenerToStartBtn();
     this.addListenerToStopBtn();
     this.root.append(this.car);
+    this.updateSize();
+    window.addEventListener('resize', () => this.updateSize());
+  }
+
+  updateSize() {
+    this.size = this.car.getNode().clientWidth;
+    this.car.getCarFlag().setAttribute('style', `left: ${this.size - 250}px`);
   }
 
   getCar() {
@@ -43,12 +52,14 @@ export default class CarController {
           const interval = resp.distance / resp.velocity;
           let distance = this.car.getNode().clientWidth / interval;
           this.timer = setInterval(() => {
-            distance += this.car.getNode().clientWidth / interval;
+            distance += this.size / interval;
             this.car.getCarImg().setAttribute('style', `left: ${distance}px`);
-            if (distance >= this.car.getNode().clientWidth - 100)
-              clearInterval(this.timer);
+            if (distance >= this.size - 100) clearInterval(this.timer);
           }, 1);
         });
+      this.raceService
+        .engineManager(this.car.getCarID(), 'drive')
+        .catch(() => clearInterval(this.timer));
     });
   }
 

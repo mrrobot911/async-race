@@ -16,3 +16,8 @@
 .car-name {
   display: inline;
 }
+
+.flag {
+  position: relative;
+  top: -30px;
+}

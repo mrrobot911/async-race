@@ -3,7 +3,7 @@ import ApiCarService from '../service/api-car-service';
 import GaragePage from '../pages/garage-page/garage';
 import Car from '../components/car/car';
 import { CarData } from '../interfaces/cars';
-import CreateCarService from '../service/createCar-service';
+import CreateCarService from '../service/editeCar-service';
 import CarController from './car-controller';
 
 export default class GarageController implements PageController {

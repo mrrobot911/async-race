@@ -3,6 +3,7 @@ import { CarData } from '../../interfaces/cars';
 import BaseComponent from '../baseComponent';
 import Button from '../button/button';
 import './car.css';
+import flagSrc from './flag.svg';
 
 export default class Car extends BaseComponent<'div'> {
   private readonly startRace: Button;
@@ -22,6 +23,8 @@ export default class Car extends BaseComponent<'div'> {
   private id: number;
 
   private img: BaseComponent<'object'>;
+
+  private readonly flag: BaseComponent<'img'>;
 
   constructor(car: CarData) {
     super({ tag: 'div', className: 'car-element' });
@@ -50,6 +53,10 @@ export default class Car extends BaseComponent<'div'> {
     this.img.setClassname('car');
     this.img.setInnerHTML(createSvg(car.color));
     this.append(this.img);
+    this.flag = new BaseComponent({ parent: this, tag: 'img' });
+    this.flag.setClassname('flag');
+    this.flag.setAttribute('src', flagSrc);
+    this.flag.setAttribute('alt', 'flag picture');
     this.raceControlsContainer.append(this.createCar.getNode());
     this.raceControlsContainer.append(this.removeCar.getNode());
     this.raceControlsContainer.append(this.carName.getNode());
@@ -88,6 +95,10 @@ export default class Car extends BaseComponent<'div'> {
 
   getCarImg() {
     return this.img;
+  }
+
+  getCarFlag() {
+    return this.flag;
   }
 
   startButtonListener() {

@@ -1,5 +1,5 @@
 export default function createSvg(color: string) {
-  return `<svg height="100px" width="100px" version="1.1" xmlns="http://www.w3.org/2000/svg" 
+  return `<svg height="100" width="100" version="1.1" xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 512 512" fill=${color} xml:space="preserve">
  <g>
    <path class="st0" d="M104.64,288.071c-11.377-0.016-21.804,4.651-29.236,12.106c-7.455,7.44-12.122,17.867-12.114,29.244
