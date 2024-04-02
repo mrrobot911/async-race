@@ -11,7 +11,9 @@ export default class ScorePage extends BaseComponent {
 
   private readonly headRow: BaseComponent<'tr'>;
 
-  private readonly headId: BaseComponent<'th'>;
+  private readonly headName: BaseComponent<'th'>;
+
+  private readonly headCar: BaseComponent<'th'>;
 
   private readonly headWins: BaseComponent<'th'>;
 
@@ -30,11 +32,16 @@ export default class ScorePage extends BaseComponent {
       tag: 'tr',
       parent: this.head.getNode(),
     });
-    this.headId = new BaseComponent({
+    this.headName = new BaseComponent({
       tag: 'th',
-      content: 'id',
+      content: 'name',
     });
-    this.headRow.append(this.headId);
+    this.headRow.append(this.headName);
+    this.headCar = new BaseComponent({
+      tag: 'th',
+      content: 'car',
+    });
+    this.headRow.append(this.headCar);
     this.headWins = new BaseComponent({
       tag: 'th',
       content: 'wins',
