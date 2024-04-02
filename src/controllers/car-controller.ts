@@ -43,6 +43,10 @@ export default class CarController {
       );
   }
 
+  removeCar() {
+    return this.car.getDeleteCarButton();
+  }
+
   getCar() {
     return this.car;
   }

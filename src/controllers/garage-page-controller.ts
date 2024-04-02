@@ -58,6 +58,9 @@ export default class GarageController implements PageController {
         this.toggleDisabledPagination();
         resp.response.forEach((car: CarData) => {
           const carEl = new CarController(this.view.getGarage(), car);
+          carEl.removeCar().addListener('click', () => {
+            this.renderCar();
+          });
           this.carService.subscribeButton(
             carEl.getCar().getSelectCarButton(),
             carEl.getCar()
@@ -72,14 +75,11 @@ export default class GarageController implements PageController {
       .getRegForm()
       .returnButtonElement()
       .addListener('click', () => {
-        this.service
-          .manageCars({
-            method: 'POST',
-            value: this.view.getRegForm().submit(),
-          })
-          .then(
-            (resp) => new CarController(this.view.getGarage(), resp.response)
-          );
+        this.service.manageCars({
+          method: 'POST',
+          value: this.view.getRegForm().submit(),
+        });
+        this.renderCar();
       });
   }
 
@@ -109,11 +109,13 @@ export default class GarageController implements PageController {
 
   toggleDisabledPagination() {
     if (this.page === 1) {
-      this.view.toggleDisabled('first');
+      if (Math.ceil(this.limit / 7) === 1) {
+        this.view.toggleDisabled('all');
+      } else {
+        this.view.toggleDisabled('first');
+      }
     } else if (Math.ceil(this.limit / 7) === this.page) {
       this.view.toggleDisabled('last');
-    } else if (Math.ceil(this.limit / 7) === 1) {
-      this.view.toggleDisabled('all');
     } else {
       this.view.toggleDisabled('noone');
     }

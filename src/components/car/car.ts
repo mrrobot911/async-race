@@ -6,17 +6,17 @@ import './car.css';
 import flagSrc from './flag.svg';
 
 export default class Car extends BaseComponent<'div'> {
-  private readonly startRace: Button;
+  private readonly startRace: Button = new Button('Start');
 
-  private readonly stopRace: Button;
+  private readonly stopRace: Button = new Button('Stop');
 
   private readonly controlsContainer: BaseComponent<'div'>;
 
   private readonly raceControlsContainer: BaseComponent<'div'>;
 
-  private readonly createCar: Button;
+  private readonly createCar: Button = new Button('Select');
 
-  private readonly removeCar: Button;
+  private readonly removeCar: Button = new Button('Remove');
 
   private readonly carName: BaseComponent<'p'>;
 
@@ -36,8 +36,6 @@ export default class Car extends BaseComponent<'div'> {
       parent: this,
       className: 'car-manager',
     });
-    this.createCar = new Button('Select');
-    this.removeCar = new Button('Remove');
     this.carName = new BaseComponent({
       parent: this,
       content: car.name,
@@ -45,8 +43,6 @@ export default class Car extends BaseComponent<'div'> {
       tag: 'p',
     });
     this.id = car.id;
-    this.startRace = new Button('Start');
-    this.stopRace = new Button('Stop');
     this.stopRace.setAttribute('disabled', 'true');
     this.append(this.raceControlsContainer.getNode());
     this.img = new BaseComponent({ parent: this, tag: 'object' });
