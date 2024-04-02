@@ -49,7 +49,10 @@ export default class CarController {
 
   addListenerToRemoveBtn() {
     this.car.getDeleteCarButton().addListener('click', () => {
-      this.carService.manageCars('DELETE', { id: this.car.getCarID() });
+      this.carService.manageCars({
+        method: 'DELETE',
+        value: { id: this.car.getCarID() },
+      });
       this.car.destroy();
     });
   }

@@ -51,7 +51,7 @@ export default class Car extends BaseComponent<'div'> {
     this.append(this.raceControlsContainer.getNode());
     this.img = new BaseComponent({ parent: this, tag: 'object' });
     this.img.setClassname('car');
-    this.img.setInnerHTML(createSvg(car.color));
+    this.img.setInnerHTML(createSvg(car.color, 'large'));
     this.append(this.img);
     this.flag = new BaseComponent({ parent: this, tag: 'img' });
     this.flag.setClassname('flag');
@@ -74,7 +74,7 @@ export default class Car extends BaseComponent<'div'> {
   updateCarData(car: Partial<CarData>) {
     if (car.id) this.id = car.id;
     if (car.name) this.carName.setContent(car.name);
-    if (car.color) this.img.setInnerHTML(createSvg(car.color));
+    if (car.color) this.img.setInnerHTML(createSvg(car.color, 'large'));
   }
 
   getSelectCarButton() {

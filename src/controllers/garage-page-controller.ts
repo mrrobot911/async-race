@@ -18,12 +18,18 @@ export default class GarageController implements PageController {
 
   private carID: number = 0;
 
+  private page: number = 1;
+
+  private limit: number = 1;
+
   constructor(private readonly root: HTMLElement) {
     this.renderCar();
     this.addListenerToCreateForm();
     this.addListenerToEditeForm();
     this.view.getRenameForm().disabled(true);
     this.subscribe();
+    this.addListenerOnPrevButton();
+    this.addListenerOnNextButton();
   }
 
   subscribe() {
@@ -44,15 +50,20 @@ export default class GarageController implements PageController {
   }
 
   renderCar() {
-    this.service.manageCars('GET').then((resp) => {
-      resp.forEach((car: CarData) => {
-        const carEl = new CarController(this.view.getGarage(), car);
-        this.carService.subscribeButton(
-          carEl.getCar().getSelectCarButton(),
-          carEl.getCar()
-        );
+    this.view.getGarage().destroyChildren();
+    this.service
+      .manageCars({ method: 'GET', page: this.page, limit: 7 })
+      .then((resp) => {
+        this.limit = Number(resp.header.get('X-Total-Count'));
+        this.toggleDisabledPagination();
+        resp.response.forEach((car: CarData) => {
+          const carEl = new CarController(this.view.getGarage(), car);
+          this.carService.subscribeButton(
+            carEl.getCar().getSelectCarButton(),
+            carEl.getCar()
+          );
+        });
       });
-    });
   }
 
   addListenerToCreateForm() {
@@ -61,8 +72,13 @@ export default class GarageController implements PageController {
       .returnButtonElement()
       .addListener('click', () => {
         this.service
-          .manageCars('POST', this.view.getRegForm().submit())
-          .then((resp) => new CarController(this.view.getGarage(), resp));
+          .manageCars({
+            method: 'POST',
+            value: this.view.getRegForm().submit(),
+          })
+          .then(
+            (resp) => new CarController(this.view.getGarage(), resp.response)
+          );
       });
   }
 
@@ -75,17 +91,47 @@ export default class GarageController implements PageController {
         const sendData: Partial<CarData> = { id: this.carID };
         if (name) sendData.name = name;
         if (color) sendData.color = color;
-        this.service.manageCars('PUT', sendData).then((resp) => {
-          this.view
-            .getGarage()
-            .getChildren()
-            .forEach((car) => {
-              if (car instanceof Car && car.getCarID() === this.carID) {
-                car.updateCarData(resp);
-              }
-            });
-        });
+        this.service
+          .manageCars({ method: 'PUT', value: sendData })
+          .then((resp) => {
+            this.view
+              .getGarage()
+              .getChildren()
+              .forEach((car) => {
+                if (car instanceof Car && car.getCarID() === this.carID) {
+                  car.updateCarData(resp.response);
+                }
+              });
+          });
       });
+  }
+
+  toggleDisabledPagination() {
+    if (this.page === 1) {
+      this.view.toggleDisabled('first');
+    } else if (Math.ceil(this.limit / 7) === this.page) {
+      this.view.toggleDisabled('last');
+    } else if (Math.ceil(this.limit / 7) === 1) {
+      this.view.toggleDisabled('all');
+    } else {
+      this.view.toggleDisabled('noone');
+    }
+  }
+
+  addListenerOnPrevButton() {
+    this.view.getPrevPage().addListener('click', () => {
+      if (this.page !== 1) this.page -= 1;
+      this.toggleDisabledPagination();
+      this.renderCar();
+    });
+  }
+
+  addListenerOnNextButton() {
+    this.view.getNextPage().addListener('click', () => {
+      if (this.page !== Math.ceil(this.limit / 7)) this.page += 1;
+      this.toggleDisabledPagination();
+      this.renderCar();
+    });
   }
 
   createPage(): void {

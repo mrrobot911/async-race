@@ -1,6 +1,13 @@
 import { CarData } from '../interfaces/cars';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
+
+interface QuerryData {
+  method: Method;
+  value?: Partial<CarData>;
+  page?: number;
+  limit?: number;
+}
 export default class ApiCarService {
   private static instance: ApiCarService;
 
@@ -18,10 +25,10 @@ export default class ApiCarService {
     return ApiCarService.instance;
   }
 
-  public async manageCars(method: Method, value?: Partial<CarData>) {
+  public async manageCars({ method, value, page, limit }: QuerryData) {
     try {
       const response = await fetch(
-        `${this.baseURL}/garage/${value?.id || ''}`,
+        `${this.baseURL}/garage/${value?.id || ''}${limit ? '?_limit=7' : ''}${page ? '&_page='.concat(String(page)) : ''}`,
         {
           method,
           headers: { 'Content-type': 'application/json' },
@@ -31,7 +38,8 @@ export default class ApiCarService {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return await response.json();
+      const result = await response.json();
+      return { response: result, header: response.headers };
     } catch (error) {
       console.error('Error:', error);
       throw error;

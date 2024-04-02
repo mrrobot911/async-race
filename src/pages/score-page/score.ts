@@ -1,5 +1,6 @@
 import BaseComponent from '../../components/baseComponent';
 import TableRow from '../../components/table row/row';
+import { CarData } from '../../interfaces/cars';
 import { WinnersData } from '../../interfaces/winners';
 import './score.css';
 
@@ -50,7 +51,7 @@ export default class ScorePage extends BaseComponent {
     });
   }
 
-  createWinner(data: WinnersData): void {
-    this.body.append(new TableRow(data));
+  createWinner(data: WinnersData, car: CarData): void {
+    this.body.append(new TableRow(data, car));
   }
 }
