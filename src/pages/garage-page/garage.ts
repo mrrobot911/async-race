@@ -1,34 +1,55 @@
 import BaseComponent from '../../components/baseComponent';
 import CreateForm from '../../components/create-form/create-form';
+import './garage.css';
 
 type Trigger = 'first' | 'last' | 'all' | 'noone';
 
 class GaragePage extends BaseComponent {
-  private readonly formCreate: CreateForm;
+  private readonly formCreate: CreateForm = new CreateForm(
+    this.node,
+    'Create',
+    'createFormElement'
+  );
 
-  private readonly formRename: CreateForm;
+  private readonly formRename: CreateForm = new CreateForm(
+    this.node,
+    'Update',
+    'renameFormElement'
+  );
 
-  private readonly section: BaseComponent<'section'>;
+  private readonly section: BaseComponent<'section'> = new BaseComponent({
+    tag: 'section',
+  });
 
-  private readonly prevPage: BaseComponent<'button'>;
+  private readonly page: BaseComponent<'p'> = new BaseComponent({ tag: 'p' });
 
-  private readonly nextPage: BaseComponent<'button'>;
+  private readonly prevPage: BaseComponent<'button'> = new BaseComponent({
+    tag: 'button',
+    content: 'Prev',
+  });
 
-  private readonly pagination: BaseComponent<'section'>;
+  private readonly nextPage: BaseComponent<'button'> = new BaseComponent({
+    tag: 'button',
+    content: 'Next',
+  });
+
+  private readonly pagination: BaseComponent<'section'> = new BaseComponent({
+    tag: 'section',
+  });
 
   constructor(parent: HTMLElement, className: string) {
     super({ className, parent });
-    this.formCreate = new CreateForm(this.node, 'Create', 'createFormElement');
-    this.formRename = new CreateForm(this.node, 'Update', 'renameFormElement');
-    this.section = new BaseComponent({ tag: 'section' });
-    this.append(this.formCreate.getNode());
-    this.append(this.formRename.getNode());
+    this.page.addClass('page-title');
+    this.append(this.formCreate);
+    this.append(this.formRename);
+    this.append(this.page);
     this.append(this.section);
-    this.pagination = new BaseComponent({ tag: 'section' });
-    this.prevPage = new BaseComponent({ tag: 'button', content: 'Prev' });
-    this.nextPage = new BaseComponent({ tag: 'button', content: 'Next' });
     this.pagination.appendChildren([this.prevPage, this.nextPage]);
     this.append(this.pagination);
+  }
+
+  public setParagraf(value: number) {
+    this.page.getNode().textContent = `Page # ${value}`;
   }
 
   public getGarage() {

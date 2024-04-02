@@ -64,6 +64,7 @@ export default class GarageController implements PageController {
           );
         });
       });
+    this.view.setParagraf(this.page);
   }
 
   addListenerToCreateForm() {
