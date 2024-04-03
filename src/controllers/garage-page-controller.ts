@@ -17,11 +17,13 @@ export default class GarageController implements PageController {
 
   private toggleUpdateBtn: boolean = false;
 
-  private carID: number = 0;
+  private carID = 0;
 
-  private page: number = 1;
+  private page = 1;
 
-  private limit: number = 1;
+  private limit = 1;
+
+  private limitPerPage = 7;
 
   constructor(private readonly root: HTMLElement) {
     this.renderCar();
@@ -54,23 +56,34 @@ export default class GarageController implements PageController {
     this.view.getGarage().destroyChildren();
     this.carControllers = [];
     this.service
-      .manageCars({ method: 'GET', page: this.page, limit: 7 })
+      .manageCars({ method: 'GET', page: this.page, limit: this.limitPerPage })
       .then((resp) => {
         this.limit = Number(resp.header.get('X-Total-Count'));
         this.toggleDisabledPagination();
         resp.response.forEach((car: CarData) => {
           const carEl = new CarController(this.view.getGarage(), car);
           this.carControllers.push(carEl);
-          carEl.removeCar().addListener('click', () => {
-            this.renderCar();
-          });
+          carEl
+            .getCar()
+            .getDeleteCarButton()
+            .addListener('click', () => {
+              this.service.manageCars({
+                method: 'DELETE',
+                value: { id: carEl.getCarData().id },
+              });
+              carEl.getCar().destroy();
+              this.carControllers.filter(
+                (el) => el.getCarData().id !== carEl.getCarData().id
+              );
+              this.renderCar();
+            });
           this.carService.subscribeButton(
             carEl.getCar().getSelectCarButton(),
             carEl
           );
         });
       });
-    this.view.setParagraf(this.page);
+    this.view.setParagraf(this.page, Math.ceil(this.limit / this.limitPerPage));
   }
 
   addListenerToRegForm() {
@@ -113,12 +126,12 @@ export default class GarageController implements PageController {
 
   toggleDisabledPagination() {
     if (this.page === 1) {
-      if (Math.ceil(this.limit / 7) === 1) {
+      if (Math.ceil(this.limit / this.limitPerPage) === 1) {
         this.view.toggleDisabled('all');
       } else {
         this.view.toggleDisabled('first');
       }
-    } else if (Math.ceil(this.limit / 7) === this.page) {
+    } else if (Math.ceil(this.limit / this.limitPerPage) === this.page) {
       this.view.toggleDisabled('last');
     } else {
       this.view.toggleDisabled('noone');
@@ -135,7 +148,8 @@ export default class GarageController implements PageController {
 
   addListenerOnNextButton() {
     this.view.getNextPage().addListener('click', () => {
-      if (this.page !== Math.ceil(this.limit / 7)) this.page += 1;
+      if (this.page !== Math.ceil(this.limit / this.limitPerPage))
+        this.page += 1;
       this.toggleDisabledPagination();
       this.renderCar();
     });

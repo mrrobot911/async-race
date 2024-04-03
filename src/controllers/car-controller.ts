@@ -1,30 +1,26 @@
 import BaseComponent from '../components/baseComponent';
 import Car from '../components/car/car';
 import { CarData } from '../interfaces/cars';
-import ApiCarService from '../service/api-car-service';
 import ApiRaceService from '../service/api-race-service';
 
 export default class CarController {
-  private readonly carService: ApiCarService = ApiCarService.getInstance();
-
   private readonly raceService: ApiRaceService = ApiRaceService.getInstance();
 
   private readonly car: Car;
 
-  private timer: number = 0;
+  private timer = 0;
 
-  private size: number = 0;
+  private size = 0;
 
-  private distance: number = 1;
+  private distance = 1;
 
-  private interval: number = 0;
+  private interval = 0;
 
   constructor(
     private readonly root: BaseComponent<'section'>,
     private carData: CarData
   ) {
     this.car = new Car(this.carData);
-    this.addListenerToRemoveBtn();
     this.addListenerToStartBtn();
     this.addListenerToStopBtn();
     this.root.append(this.car);
@@ -57,16 +53,6 @@ export default class CarController {
 
   getCar() {
     return this.car;
-  }
-
-  addListenerToRemoveBtn() {
-    this.car.getDeleteCarButton().addListener('click', () => {
-      this.carService.manageCars({
-        method: 'DELETE',
-        value: { id: this.carData.id },
-      });
-      this.car.destroy();
-    });
   }
 
   addListenerToStartBtn() {

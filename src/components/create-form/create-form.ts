@@ -13,9 +13,7 @@ export default class CreateForm extends BaseComponent<'form'> {
     super({ parent, className: 'create-car', tag: 'form' });
     this.submitCar = new Input('button', name);
     this.addClass(className);
-    this.append(this.carName);
-    this.append(this.carColor);
-    this.append(this.submitCar);
+    this.appendChildren([this.carName, this.carColor, this.submitCar]);
   }
 
   returnButtonElement() {

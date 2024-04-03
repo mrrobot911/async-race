@@ -40,16 +40,18 @@ class GaragePage extends BaseComponent {
   constructor(parent: HTMLElement, className: string) {
     super({ className, parent });
     this.page.addClass('page-title');
-    this.append(this.formCreate);
-    this.append(this.formRename);
-    this.append(this.page);
-    this.append(this.section);
     this.pagination.appendChildren([this.prevPage, this.nextPage]);
-    this.append(this.pagination);
+    this.appendChildren([
+      this.formCreate,
+      this.formRename,
+      this.page,
+      this.section,
+      this.pagination,
+    ]);
   }
 
-  public setParagraf(value: number) {
-    this.page.getNode().textContent = `Page # ${value}`;
+  public setParagraf(value: number, pages: number) {
+    this.page.setContent(`Page # ${value} (${pages})`);
   }
 
   public getGarage() {

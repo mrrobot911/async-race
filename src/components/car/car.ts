@@ -50,12 +50,16 @@ export default class Car extends BaseComponent<'div'> {
     this.flag.setClassname('flag');
     this.flag.setAttribute('src', flagSrc);
     this.flag.setAttribute('alt', 'flag picture');
-    this.raceControlsContainer.append(this.createCar.getNode());
-    this.raceControlsContainer.append(this.removeCar.getNode());
-    this.raceControlsContainer.append(this.carName.getNode());
+    this.raceControlsContainer.appendChildren([
+      this.createCar.getNode(),
+      this.removeCar.getNode(),
+      this.carName.getNode(),
+    ]);
     this.append(this.controlsContainer.getNode());
-    this.controlsContainer.append(this.startRace.getNode());
-    this.controlsContainer.append(this.stopRace.getNode());
+    this.controlsContainer.appendChildren([
+      this.startRace.getNode(),
+      this.stopRace.getNode(),
+    ]);
     this.startButtonListener();
     this.stopButtonListener();
   }
