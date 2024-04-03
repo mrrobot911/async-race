@@ -33,19 +33,19 @@ export default class GarageController implements PageController {
   }
 
   subscribe() {
-    this.carService.subscribeToChanges((value: number) => {
-      if (this.carID === value) {
+    this.carService.subscribeToChanges((data: CarData) => {
+      if (this.carID === data.id) {
         this.toggleUpdateBtn = !this.toggleUpdateBtn;
         if (this.toggleUpdateBtn) {
           this.view.getRenameForm().disabled(true);
         } else {
-          this.view.getRenameForm().disabled(false);
+          this.view.getRenameForm().disabled(false, data);
         }
       } else {
-        this.view.getRenameForm().disabled(false);
+        this.view.getRenameForm().disabled(false, data);
         this.toggleUpdateBtn = false;
       }
-      this.carID = value;
+      this.carID = data.id;
     });
   }
 
@@ -99,7 +99,7 @@ export default class GarageController implements PageController {
               .getGarage()
               .getChildren()
               .forEach((car) => {
-                if (car instanceof Car && car.getCarID() === this.carID) {
+                if (car instanceof Car && car.getCar().id === this.carID) {
                   car.updateCarData(resp.response);
                 }
               });
