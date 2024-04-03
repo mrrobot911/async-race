@@ -75,6 +75,8 @@ export default class GarageController implements PageController {
               this.carControllers.filter(
                 (el) => el.getCarData().id !== carEl.getCarData().id
               );
+              this.limit -= 1;
+              this.page = Math.round(this.limit / this.limitPerPage);
               this.renderCar();
             });
           this.carService.subscribeButton(
@@ -96,6 +98,8 @@ export default class GarageController implements PageController {
           value: this.view.getRegForm().submit(),
         });
         this.view.getRegForm().cleareForm();
+        this.limit += 1;
+        this.page = Math.round(this.limit / this.limitPerPage);
         this.renderCar();
       });
   }
