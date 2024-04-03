@@ -13,14 +13,16 @@ export default class CreateForm extends BaseComponent<'form'> {
     super({ parent, className: 'create-car', tag: 'form' });
     this.submitCar = new Input('button', name);
     this.addClass(className);
-    this.appendChildren([this.carName, this.carColor, this.submitCar]);
+    this.append(this.carName);
+    this.append(this.carColor);
+    this.append(this.submitCar);
   }
 
   returnButtonElement() {
     return this.submitCar;
   }
 
-  disabled(flag: boolean, data?: Partial<CarData>) {
+  disabled(flag: boolean, data?: CarData) {
     if (flag) {
       this.carName.setAttribute('disabled', 'true');
       this.carColor.setAttribute('disabled', 'true');
@@ -34,14 +36,20 @@ export default class CreateForm extends BaseComponent<'form'> {
     }
   }
 
-  cleareForm(data?: Partial<CarData>) {
-    this.carName.getNode().value = data?.name || '';
-    this.carColor.getNode().value = data?.color || '';
+  cleareForm(data?: CarData) {
+    if (data) {
+      this.carName.getNode().value = data.name;
+      this.carColor.getNode().value = data.color;
+    } else {
+      this.carName.getNode().value = '';
+      this.carColor.getNode().value = '';
+    }
   }
 
   submit() {
-    const name = this.carName.getValue();
-    const color = this.carColor.getValue();
-    return { name, color };
+    return {
+      name: this.carName.getNode().value || '',
+      color: this.carColor.getNode().value || '',
+    };
   }
 }

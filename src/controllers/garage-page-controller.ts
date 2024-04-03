@@ -25,7 +25,7 @@ export default class GarageController implements PageController {
 
   constructor(private readonly root: HTMLElement) {
     this.renderCar();
-    this.addListenerToCreateForm();
+    this.addListenerToRegForm();
     this.addListenerToEditeForm();
     this.view.getRenameForm().disabled(true);
     this.subscribe();
@@ -52,6 +52,7 @@ export default class GarageController implements PageController {
 
   renderCar() {
     this.view.getGarage().destroyChildren();
+    this.carControllers = [];
     this.service
       .manageCars({ method: 'GET', page: this.page, limit: 7 })
       .then((resp) => {
@@ -72,7 +73,7 @@ export default class GarageController implements PageController {
     this.view.setParagraf(this.page);
   }
 
-  addListenerToCreateForm() {
+  addListenerToRegForm() {
     this.view
       .getRegForm()
       .returnButtonElement()
