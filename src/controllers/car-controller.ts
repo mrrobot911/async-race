@@ -43,6 +43,14 @@ export default class CarController {
       );
   }
 
+  getCarData() {
+    return this.carData;
+  }
+
+  setCarData(data: CarData) {
+    this.carData = data;
+  }
+
   removeCar() {
     return this.car.getDeleteCarButton();
   }
@@ -55,7 +63,7 @@ export default class CarController {
     this.car.getDeleteCarButton().addListener('click', () => {
       this.carService.manageCars({
         method: 'DELETE',
-        value: { id: this.car.getCar().id },
+        value: { id: this.carData.id },
       });
       this.car.destroy();
     });
@@ -64,7 +72,7 @@ export default class CarController {
   addListenerToStartBtn() {
     this.car.getStartCarButton().addListener('click', () => {
       this.raceService
-        .engineManager(this.car.getCar().id, 'started')
+        .engineManager(this.carData.id, 'started')
         .then((resp) => {
           this.interval = resp.distance / resp.velocity;
           this.timer = setInterval(() => {
@@ -80,7 +88,7 @@ export default class CarController {
           }, 1);
         });
       this.raceService
-        .engineManager(this.car.getCar().id, 'drive')
+        .engineManager(this.carData.id, 'drive')
         .catch(() => clearInterval(this.timer));
     });
   }
@@ -93,12 +101,10 @@ export default class CarController {
 
   addListenerToStopBtn() {
     this.car.getStopCarButton().addListener('click', () => {
-      this.raceService
-        .engineManager(this.car.getCar().id, 'stopped')
-        .then(() => {
-          this.clearSittings();
-          this.car.getCarImg().removeAttribute('style');
-        });
+      this.raceService.engineManager(this.carData.id, 'stopped').then(() => {
+        this.clearSittings();
+        this.car.getCarImg().removeAttribute('style');
+      });
     });
   }
 }

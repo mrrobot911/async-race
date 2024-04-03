@@ -1,7 +1,6 @@
 import { PageController } from '../interfaces/pageController';
 import ApiCarService from '../service/api-car-service';
 import GaragePage from '../pages/garage-page/garage';
-import Car from '../components/car/car';
 import { CarData } from '../interfaces/cars';
 import CreateCarService from '../service/editeCar-service';
 import CarController from './car-controller';
@@ -13,6 +12,8 @@ export default class GarageController implements PageController {
 
   private readonly carService: CreateCarService =
     CreateCarService.getInstance();
+
+  private carControllers: CarController[] = [];
 
   private toggleUpdateBtn: boolean = false;
 
@@ -58,12 +59,13 @@ export default class GarageController implements PageController {
         this.toggleDisabledPagination();
         resp.response.forEach((car: CarData) => {
           const carEl = new CarController(this.view.getGarage(), car);
+          this.carControllers.push(carEl);
           carEl.removeCar().addListener('click', () => {
             this.renderCar();
           });
           this.carService.subscribeButton(
             carEl.getCar().getSelectCarButton(),
-            carEl.getCar()
+            carEl
           );
         });
       });
@@ -89,20 +91,20 @@ export default class GarageController implements PageController {
       .returnButtonElement()
       .addListener('click', () => {
         const { name, color } = this.view.getRenameForm().submit();
+        this.view.getRenameForm().disabled(true);
+        this.toggleUpdateBtn = true;
         const sendData: Partial<CarData> = { id: this.carID };
         if (name) sendData.name = name;
         if (color) sendData.color = color;
         this.service
           .manageCars({ method: 'PUT', value: sendData })
           .then((resp) => {
-            this.view
-              .getGarage()
-              .getChildren()
-              .forEach((car) => {
-                if (car instanceof Car && car.getCar().id === this.carID) {
-                  car.updateCarData(resp.response);
-                }
-              });
+            this.carControllers.forEach((car) => {
+              if (car.getCarData().id === this.carID) {
+                car.getCar().updateCarData(resp.response);
+                car.setCarData(resp.response);
+              }
+            });
           });
       });
   }

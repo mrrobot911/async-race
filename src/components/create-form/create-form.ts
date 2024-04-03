@@ -23,7 +23,9 @@ export default class CreateForm extends BaseComponent<'form'> {
   disabled(flag: boolean, data?: Partial<CarData>) {
     if (flag) {
       this.carName.setAttribute('disabled', 'true');
+      this.carName.getNode().value = '';
       this.carColor.setAttribute('disabled', 'true');
+      this.carColor.getNode().value = '';
       this.submitCar.setAttribute('disabled', 'true');
     } else {
       this.carName.getNode().value = data?.name || '';
@@ -37,8 +39,6 @@ export default class CreateForm extends BaseComponent<'form'> {
   submit() {
     const name = this.carName.getValue();
     const color = this.carColor.getValue();
-    this.carName.getNode().value = '';
-    this.carColor.getNode().value = '';
     return { name, color };
   }
 }

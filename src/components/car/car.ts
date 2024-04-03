@@ -20,8 +20,6 @@ export default class Car extends BaseComponent<'div'> {
 
   private readonly carName: BaseComponent<'p'>;
 
-  private data: CarData;
-
   private img: BaseComponent<'object'>;
 
   private readonly flag: BaseComponent<'img'>;
@@ -42,7 +40,6 @@ export default class Car extends BaseComponent<'div'> {
       className: 'car-name',
       tag: 'p',
     });
-    this.data = car;
     this.stopRace.setAttribute('disabled', 'true');
     this.append(this.raceControlsContainer.getNode());
     this.img = new BaseComponent({ parent: this, tag: 'object' });
@@ -63,14 +60,9 @@ export default class Car extends BaseComponent<'div'> {
     this.stopButtonListener();
   }
 
-  getCar() {
-    return this.data;
-  }
-
-  updateCarData(car: Partial<CarData>) {
-    if (car.id) this.data.id = car.id;
-    if (car.name) this.carName.setContent(car.name);
-    if (car.color) this.img.setInnerHTML(createSvg(car.color, 'large'));
+  updateCarData(car: CarData) {
+    this.carName.setContent(car.name);
+    this.img.setInnerHTML(createSvg(car.color, 'large'));
   }
 
   getSelectCarButton() {

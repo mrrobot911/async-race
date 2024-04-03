@@ -1,5 +1,5 @@
 import Button from '../components/button/button';
-import Car from '../components/car/car';
+import CarController from '../controllers/car-controller';
 import EventObserver from '../helpers/observer';
 import { CarData } from '../interfaces/cars';
 
@@ -22,9 +22,9 @@ export default class CreateCarService {
     return CreateCarService.instance;
   }
 
-  subscribeButton(button: Button, root: Car): void {
+  subscribeButton(button: Button, controller: CarController): void {
     button.addListener('click', () => {
-      this.activeCar = root.getCar();
+      this.activeCar = controller.getCarData();
       this.createCarObserver.notify(this.activeCar);
     });
   }
