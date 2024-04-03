@@ -71,13 +71,16 @@ export default class GarageController implements PageController {
                 method: 'DELETE',
                 value: { id: carEl.getCarData().id },
               });
-              carEl.getCar().destroy();
-              this.carControllers.filter(
-                (el) => el.getCarData().id !== carEl.getCarData().id
-              );
+              this.carControllers.forEach((el) => {
+                if (el.getCarData().id === carEl.getCarData().id) {
+                  el.getCar().destroy();
+                }
+              });
               this.limit -= 1;
-              this.page = Math.round(this.limit / this.limitPerPage);
-              this.renderCar();
+              this.page = Math.ceil(this.limit / this.limitPerPage);
+              if (this.limit % this.limitPerPage === 0) {
+                this.renderCar();
+              }
             });
           this.carService.subscribeButton(
             carEl.getCar().getSelectCarButton(),
@@ -99,7 +102,7 @@ export default class GarageController implements PageController {
         });
         this.view.getRegForm().cleareForm();
         this.limit += 1;
-        this.page = Math.round(this.limit / this.limitPerPage);
+        this.page = Math.ceil(this.limit / this.limitPerPage);
         this.renderCar();
       });
   }
