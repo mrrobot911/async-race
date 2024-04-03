@@ -23,17 +23,20 @@ export default class CreateForm extends BaseComponent<'form'> {
   disabled(flag: boolean, data?: Partial<CarData>) {
     if (flag) {
       this.carName.setAttribute('disabled', 'true');
-      this.carName.getNode().value = '';
       this.carColor.setAttribute('disabled', 'true');
-      this.carColor.getNode().value = '';
       this.submitCar.setAttribute('disabled', 'true');
+      this.cleareForm();
     } else {
-      this.carName.getNode().value = data?.name || '';
       this.carName.removeAttribute('disabled');
-      this.carColor.getNode().value = data?.color || '';
       this.carColor.removeAttribute('disabled');
       this.submitCar.removeAttribute('disabled');
+      this.cleareForm(data);
     }
+  }
+
+  cleareForm(data?: Partial<CarData>) {
+    this.carName.getNode().value = data?.name || '';
+    this.carColor.getNode().value = data?.color || '';
   }
 
   submit() {

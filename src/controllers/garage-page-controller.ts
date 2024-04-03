@@ -81,6 +81,7 @@ export default class GarageController implements PageController {
           method: 'POST',
           value: this.view.getRegForm().submit(),
         });
+        this.view.getRegForm().cleareForm();
         this.renderCar();
       });
   }
