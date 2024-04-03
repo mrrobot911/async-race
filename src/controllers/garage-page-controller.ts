@@ -101,8 +101,6 @@ export default class GarageController implements PageController {
           value: this.view.getRegForm().submit(),
         });
         this.view.getRegForm().cleareForm();
-        this.limit += 1;
-        this.page = Math.ceil(this.limit / this.limitPerPage);
         this.renderCar();
       });
   }
