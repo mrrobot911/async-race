@@ -23,7 +23,6 @@ export default class CarController {
     this.car = new Car(this.carData);
     this.addListenerToStartBtn();
     this.addListenerToStopBtn();
-    this.root.append(this.car);
     this.updateSize();
     window.addEventListener('resize', () => this.updateSize());
   }
@@ -45,10 +44,6 @@ export default class CarController {
 
   setCarData(data: CarData) {
     this.carData = data;
-  }
-
-  removeCar() {
-    return this.car.getDeleteCarButton();
   }
 
   getCar() {
@@ -92,5 +87,17 @@ export default class CarController {
         this.car.getCarImg().removeAttribute('style');
       });
     });
+  }
+
+  renderCar() {
+    this.root.append(this.car);
+  }
+
+  removeCar() {
+    this.car.getNode().remove();
+  }
+
+  destroyCar() {
+    this.car.destroy();
   }
 }

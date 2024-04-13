@@ -55,40 +55,28 @@ export default class GarageController implements PageController {
   renderCar() {
     this.view.getGarage().destroyChildren();
     this.carControllers = [];
-    this.service
-      .manageCars({ method: 'GET', page: this.page, limit: this.limitPerPage })
-      .then((resp) => {
-        this.limit = Number(resp.header.get('X-Total-Count'));
-        this.toggleDisabledPagination();
-        resp.response.forEach((car: CarData) => {
-          const carEl = new CarController(this.view.getGarage(), car);
-          this.carControllers.push(carEl);
-          carEl
-            .getCar()
-            .getDeleteCarButton()
-            .addListener('click', () => {
-              this.service.manageCars({
-                method: 'DELETE',
-                value: { id: carEl.getCarData().id },
-              });
-              this.carControllers.forEach((el) => {
-                if (el.getCarData().id === carEl.getCarData().id) {
-                  el.getCar().destroy();
-                }
-              });
-              this.limit -= 1;
-              this.page = Math.ceil(this.limit / this.limitPerPage);
-              if (this.limit % this.limitPerPage === 0) {
-                this.renderCar();
-              }
-            });
-          this.carService.subscribeButton(
-            carEl.getCar().getSelectCarButton(),
-            carEl
-          );
-        });
+    this.service.manageCars({ method: 'GET' }).then((resp) => {
+      resp.response.forEach((car: CarData) => {
+        this.CreateCar(car);
       });
+      this.limit = this.carControllers.length;
+      this.toggleDisabledPagination();
+      this.render();
+    });
+  }
+
+  render() {
+    const startIndex = (this.page - 1) * this.limitPerPage;
+    const endIndex = Math.min(
+      startIndex + this.limitPerPage,
+      this.carControllers.length
+    );
     this.view.setParagraf(this.page, Math.ceil(this.limit / this.limitPerPage));
+    this.toggleDisabledPagination();
+    this.carControllers.forEach((car) => car.removeCar());
+    this.carControllers
+      .slice(startIndex, endIndex)
+      .forEach((car) => car.renderCar());
   }
 
   addListenerToRegForm() {
@@ -96,12 +84,17 @@ export default class GarageController implements PageController {
       .getRegForm()
       .returnButtonElement()
       .addListener('click', () => {
-        this.service.manageCars({
-          method: 'POST',
-          value: this.view.getRegForm().submit(),
-        });
-        this.view.getRegForm().cleareForm();
-        this.renderCar();
+        this.service
+          .manageCars({
+            method: 'POST',
+            value: this.view.getRegForm().submit(),
+          })
+          .then((resp) => {
+            this.limit += 1;
+            this.view.getRegForm().cleareForm();
+            this.CreateCar(resp.response);
+            this.render();
+          });
       });
   }
 
@@ -147,7 +140,7 @@ export default class GarageController implements PageController {
     this.view.getPrevPage().addListener('click', () => {
       if (this.page !== 1) this.page -= 1;
       this.toggleDisabledPagination();
-      this.renderCar();
+      this.render();
     });
   }
 
@@ -156,8 +149,30 @@ export default class GarageController implements PageController {
       if (this.page !== Math.ceil(this.limit / this.limitPerPage))
         this.page += 1;
       this.toggleDisabledPagination();
-      this.renderCar();
+      this.render();
     });
+  }
+
+  CreateCar(car: CarData) {
+    const carEl = new CarController(this.view.getGarage(), car);
+    this.carControllers.push(carEl);
+    carEl
+      .getCar()
+      .getDeleteCarButton()
+      .addListener('click', () => {
+        this.service.manageCars({
+          method: 'DELETE',
+          value: { id: carEl.getCarData().id },
+        });
+        this.carControllers = this.carControllers.filter(
+          (el) => el.getCarData().id !== carEl.getCarData().id
+        );
+        carEl.removeCar();
+        this.limit -= 1;
+        this.page = Math.ceil(this.limit / this.limitPerPage);
+        this.render();
+      });
+    this.carService.subscribeButton(carEl.getCar().getSelectCarButton(), carEl);
   }
 
   createPage(): void {
