@@ -21,6 +21,25 @@ class GaragePage extends BaseComponent {
     tag: 'section',
   });
 
+  private readonly pageControls: BaseComponent<'section'> = new BaseComponent({
+    tag: 'section',
+  });
+
+  private readonly generateCar: BaseComponent<'button'> = new BaseComponent({
+    tag: 'button',
+    content: 'generate',
+  });
+
+  private readonly startRace: BaseComponent<'button'> = new BaseComponent({
+    tag: 'button',
+    content: 'start race',
+  });
+
+  private readonly stopRace: BaseComponent<'button'> = new BaseComponent({
+    tag: 'button',
+    content: 'stop race',
+  });
+
   private readonly page: BaseComponent<'p'> = new BaseComponent({ tag: 'p' });
 
   private readonly prevPage: BaseComponent<'button'> = new BaseComponent({
@@ -41,9 +60,15 @@ class GaragePage extends BaseComponent {
     super({ className, parent });
     this.page.addClass('page-title');
     this.pagination.appendChildren([this.prevPage, this.nextPage]);
+    this.pageControls.appendChildren([
+      this.startRace,
+      this.stopRace,
+      this.generateCar,
+    ]);
     this.appendChildren([
       this.formCreate,
       this.formRename,
+      this.pageControls,
       this.page,
       this.section,
       this.pagination,
@@ -52,6 +77,10 @@ class GaragePage extends BaseComponent {
 
   public setParagraf(value: number, pages: number) {
     this.page.setContent(`Page # ${value} (${pages})`);
+  }
+
+  public getGenerateCarBtn() {
+    return this.generateCar;
   }
 
   public getGarage() {
