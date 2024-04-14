@@ -1,10 +1,9 @@
 import BaseComponent from '../../components/baseComponent';
 import CreateForm from '../../components/create-form/create-form';
+import Pagination from '../../helpers/pagination';
 import './garage.css';
 
-type Trigger = 'first' | 'last' | 'all' | 'noone';
-
-class GaragePage extends BaseComponent {
+class GaragePage extends Pagination {
   private readonly formCreate: CreateForm = new CreateForm(
     this.node,
     'Create',
@@ -42,24 +41,13 @@ class GaragePage extends BaseComponent {
 
   private readonly page: BaseComponent<'p'> = new BaseComponent({ tag: 'p' });
 
-  private readonly prevPage: BaseComponent<'button'> = new BaseComponent({
-    tag: 'button',
-    content: 'Prev',
-  });
-
-  private readonly nextPage: BaseComponent<'button'> = new BaseComponent({
-    tag: 'button',
-    content: 'Next',
-  });
-
-  private readonly pagination: BaseComponent<'section'> = new BaseComponent({
-    tag: 'section',
-  });
-
   constructor(parent: HTMLElement, className: string) {
     super({ className, parent });
     this.page.addClass('page-title');
-    this.pagination.appendChildren([this.prevPage, this.nextPage]);
+    this.getPagination().appendChildren([
+      this.getPrevPage(),
+      this.getNextPage(),
+    ]);
     this.stopRace.setAttribute('disabled', 'true');
     this.pageControls.appendChildren([
       this.startRace,
@@ -72,7 +60,7 @@ class GaragePage extends BaseComponent {
       this.pageControls,
       this.page,
       this.section,
-      this.pagination,
+      this.getPagination(),
     ]);
     this.startButtonListener();
     this.stopButtonListener();
@@ -106,14 +94,6 @@ class GaragePage extends BaseComponent {
     return this.formRename;
   }
 
-  public getPrevPage() {
-    return this.prevPage;
-  }
-
-  public getNextPage() {
-    return this.nextPage;
-  }
-
   private startButtonListener() {
     this.startRace.addListener('click', () => {
       this.startRace.setAttribute('disabled', 'true');
@@ -126,25 +106,6 @@ class GaragePage extends BaseComponent {
       this.stopRace.setAttribute('disabled', 'true');
       this.startRace.removeAttribute('disabled');
     });
-  }
-
-  public toggleDisabled(trigger: Trigger) {
-    if (trigger === 'first') {
-      this.prevPage.setAttribute('disabled', 'true');
-      this.nextPage.removeAttribute('disabled');
-    }
-    if (trigger === 'last') {
-      this.nextPage.setAttribute('disabled', 'true');
-      this.prevPage.removeAttribute('disabled');
-    }
-    if (trigger === 'noone') {
-      this.prevPage.removeAttribute('disabled');
-      this.nextPage.removeAttribute('disabled');
-    }
-    if (trigger === 'all') {
-      this.prevPage.setAttribute('disabled', 'true');
-      this.nextPage.setAttribute('disabled', 'true');
-    }
   }
 }
 

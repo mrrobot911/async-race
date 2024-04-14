@@ -22,13 +22,13 @@ export default class ScoreController implements PageController {
 
   constructor(private readonly root: HTMLElement) {}
 
-  fetchCars() {
+  private fetchCars() {
     return this.carService.manageCars({ method: 'GET' }).then((resp) => {
       this.carData = resp.response;
     });
   }
 
-  fetchScore() {
+  private fetchScore() {
     return this.service.managWinners('GET').then((resp) => {
       this.winnersData = resp;
     });
@@ -46,7 +46,7 @@ export default class ScoreController implements PageController {
       });
   }
 
-  createPage(): void {
+  public createPage(): void {
     Promise.all([this.fetchScore(), this.fetchCars()]).then(() => {
       this.renderScore();
       this.root.append(this.view.getNode());

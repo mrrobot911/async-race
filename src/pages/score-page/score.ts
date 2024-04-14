@@ -1,23 +1,36 @@
 import BaseComponent from '../../components/baseComponent';
 import TableRow from '../../components/table row/row';
+import Pagination from '../../helpers/pagination';
 import { CarData } from '../../interfaces/cars';
 import { WinnersData } from '../../interfaces/winners';
 import './score.css';
 
-export default class ScorePage extends BaseComponent {
+export default class ScorePage extends Pagination {
   private readonly section: BaseComponent<'table'>;
 
   private readonly head: BaseComponent<'thead'>;
 
   private readonly headRow: BaseComponent<'tr'>;
 
-  private readonly headName: BaseComponent<'th'>;
+  private readonly headName: BaseComponent<'th'> = new BaseComponent({
+    tag: 'th',
+    content: 'name',
+  });
 
-  private readonly headCar: BaseComponent<'th'>;
+  private readonly headCar: BaseComponent<'th'> = new BaseComponent({
+    tag: 'th',
+    content: 'car',
+  });
 
-  private readonly headWins: BaseComponent<'th'>;
+  private readonly headWins: BaseComponent<'th'> = new BaseComponent({
+    tag: 'th',
+    content: 'wins',
+  });
 
-  private readonly headTime: BaseComponent<'th'>;
+  private readonly headTime: BaseComponent<'th'> = new BaseComponent({
+    tag: 'th',
+    content: 'time',
+  });
 
   private readonly body: BaseComponent<'tbody'>;
 
@@ -32,30 +45,21 @@ export default class ScorePage extends BaseComponent {
       tag: 'tr',
       parent: this.head.getNode(),
     });
-    this.headName = new BaseComponent({
-      tag: 'th',
-      content: 'name',
-    });
-    this.headRow.append(this.headName);
-    this.headCar = new BaseComponent({
-      tag: 'th',
-      content: 'car',
-    });
-    this.headRow.append(this.headCar);
-    this.headWins = new BaseComponent({
-      tag: 'th',
-      content: 'wins',
-    });
-    this.headRow.append(this.headWins);
-    this.headTime = new BaseComponent({
-      tag: 'th',
-      content: 'time',
-    });
-    this.headRow.append(this.headTime);
+    this.headRow.appendChildren([
+      this.headName,
+      this.headCar,
+      this.headWins,
+      this.headTime,
+    ]);
     this.body = new BaseComponent({
       tag: 'tbody',
       parent: this.section.getNode(),
     });
+    this.getPagination().appendChildren([
+      this.getPrevPage(),
+      this.getNextPage(),
+    ]);
+    this.append(this.getPagination());
   }
 
   getRows() {
