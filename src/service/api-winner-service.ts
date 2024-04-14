@@ -18,10 +18,10 @@ export default class ApiWinnerService {
     return ApiWinnerService.instance;
   }
 
-  public async managWinners(method: Method, value?: WinnersData) {
+  public async managWinners(method: Method, value?: Partial<WinnersData>) {
     try {
       const response = await fetch(
-        `${this.baseURL}/winners/${value?.id || ''}`,
+        `${this.baseURL}/winners/${(method !== 'POST' && value?.id) || ''}`,
         {
           method,
           headers: { 'Content-type': 'application/json' },

@@ -60,6 +60,7 @@ class GaragePage extends BaseComponent {
     super({ className, parent });
     this.page.addClass('page-title');
     this.pagination.appendChildren([this.prevPage, this.nextPage]);
+    this.stopRace.setAttribute('disabled', 'true');
     this.pageControls.appendChildren([
       this.startRace,
       this.stopRace,
@@ -73,10 +74,20 @@ class GaragePage extends BaseComponent {
       this.section,
       this.pagination,
     ]);
+    this.startButtonListener();
+    this.stopButtonListener();
   }
 
   public setParagraf(value: number, pages: number) {
     this.page.setContent(`Page # ${value} (${pages})`);
+  }
+
+  public getStartRaceBtn() {
+    return this.startRace;
+  }
+
+  public getStopRaceBtn() {
+    return this.stopRace;
   }
 
   public getGenerateCarBtn() {
@@ -101,6 +112,20 @@ class GaragePage extends BaseComponent {
 
   public getNextPage() {
     return this.nextPage;
+  }
+
+  private startButtonListener() {
+    this.startRace.addListener('click', () => {
+      this.startRace.setAttribute('disabled', 'true');
+      this.stopRace.removeAttribute('disabled');
+    });
+  }
+
+  private stopButtonListener() {
+    this.stopRace.addListener('click', () => {
+      this.stopRace.setAttribute('disabled', 'true');
+      this.startRace.removeAttribute('disabled');
+    });
   }
 
   public toggleDisabled(trigger: Trigger) {

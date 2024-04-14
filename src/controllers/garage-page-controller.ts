@@ -5,6 +5,8 @@ import { CarData } from '../interfaces/cars';
 import CreateCarService from '../service/editeCar-service';
 import CarController from './car-controller';
 import generateRandomCar from '../helpers/generateCar';
+import Modal from '../components/modal/modal';
+import ApiWinnerService from '../service/api-winner-service';
 
 export default class GarageController implements PageController {
   private readonly view: GaragePage = new GaragePage(this.root, 'garage');
@@ -14,9 +16,12 @@ export default class GarageController implements PageController {
   private readonly carService: CreateCarService =
     CreateCarService.getInstance();
 
+  private readonly winnerServise: ApiWinnerService =
+    ApiWinnerService.getInstance();
+
   private carControllers: CarController[] = [];
 
-  private toggleUpdateBtn: boolean = false;
+  private toggleUpdateBtn = false;
 
   private carID = 0;
 
@@ -32,6 +37,8 @@ export default class GarageController implements PageController {
     this.addListenerToEditeForm();
     this.view.getRenameForm().disabled(true);
     this.subscribe();
+    this.addListenerStartRace();
+    this.addListenerStopRace();
     this.addListenerGenerateCarButton();
     this.addListenerOnPrevButton();
     this.addListenerOnNextButton();
@@ -123,6 +130,51 @@ export default class GarageController implements PageController {
       });
   }
 
+  addListenerStartRace() {
+    this.view.getStartRaceBtn().addListener('click', () => {
+      const startIndex = (this.page - 1) * this.limitPerPage;
+      const endIndex = Math.min(
+        startIndex + this.limitPerPage,
+        this.carControllers.length
+      );
+      const racePromises = this.carControllers
+        .slice(startIndex, endIndex)
+        .map((car) => car.raceCompetition());
+
+      Promise.race(racePromises).then((result) => {
+        this.view.append(new Modal(this.view.getNode(), 'modal', result));
+        const winnerData = this.winnerServise
+          .managWinners('PUT', {
+            id: result.id,
+            time: result.time,
+          })
+          .catch(() => {
+            this.winnerServise.managWinners('POST', {
+              id: result.id,
+              time: result.time,
+              wins: 1,
+            });
+          });
+        winnerData.then();
+      });
+    });
+  }
+
+  addListenerStopRace() {
+    this.view.getStopRaceBtn().addListener('click', () => {
+      const startIndex = (this.page - 1) * this.limitPerPage;
+      const endIndex = Math.min(
+        startIndex + this.limitPerPage,
+        this.carControllers.length
+      );
+      this.carControllers
+        .slice(startIndex, endIndex)
+        .map((car) => car.resetCar());
+      const children = this.view.getChildren();
+      children[children.length - 1].remove();
+    });
+  }
+
   addListenerGenerateCarButton() {
     this.view.getGenerateCarBtn().addListener('click', () => {
       const promises = [];
@@ -189,13 +241,13 @@ export default class GarageController implements PageController {
         );
         carEl.removeCar();
         this.limit -= 1;
-        this.page = Math.ceil(this.limit / this.limitPerPage);
+        if ((this.page - 1) * this.limitPerPage === this.limit) this.page -= 1;
         this.render();
       });
     this.carService.subscribeButton(carEl.getCar().getSelectCarButton(), carEl);
   }
 
-  createPage(): void {
+  public createPage(): void {
     this.root.append(this.view.getNode());
   }
 

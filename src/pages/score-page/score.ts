@@ -58,6 +58,10 @@ export default class ScorePage extends BaseComponent {
     });
   }
 
+  getRows() {
+    return this.body;
+  }
+
   createWinner(data: WinnersData, car: CarData): void {
     this.body.append(new TableRow(data, car));
   }

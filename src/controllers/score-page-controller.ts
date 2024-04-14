@@ -12,35 +12,49 @@ export default class ScoreController implements PageController {
 
   private readonly carService: ApiCarService = ApiCarService.getInstance();
 
+  private page = 0;
+
+  private limitPerPage = 10;
+
   private carData: CarData[] = [];
 
-  constructor(private readonly root: HTMLElement) {
-    this.renderScore();
+  private winnersData: WinnersData[] = [];
+
+  constructor(private readonly root: HTMLElement) {}
+
+  fetchCars() {
+    return this.carService.manageCars({ method: 'GET' }).then((resp) => {
+      this.carData = resp.response;
+    });
+  }
+
+  fetchScore() {
+    return this.service.managWinners('GET').then((resp) => {
+      this.winnersData = resp;
+    });
   }
 
   renderScore() {
-    this.carService
-      .manageCars({ method: 'GET' })
-      .then((resp) => {
-        this.carData = resp.response;
-      })
-      .then(() => {
-        this.service.managWinners('GET').then((resp) => {
-          resp.forEach((el: WinnersData) => {
-            this.view.createWinner(
-              el,
-              this.carData.filter((car) => car.id === el.id)[0]
-            );
-          });
-        });
+    this.winnersData
+      .slice(
+        this.page * this.limitPerPage,
+        this.page * this.limitPerPage + this.limitPerPage
+      )
+      .forEach((el) => {
+        const data = this.carData.find((car) => car.id === el.id);
+        if (data) this.view.createWinner(el, data);
       });
   }
 
   createPage(): void {
-    this.root.append(this.view.getNode());
+    Promise.all([this.fetchScore(), this.fetchCars()]).then(() => {
+      this.renderScore();
+      this.root.append(this.view.getNode());
+    });
   }
 
   public removePage(): void {
+    this.view.getRows().destroyChildren();
     this.view.remove();
   }
 }
