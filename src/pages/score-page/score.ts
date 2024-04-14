@@ -66,6 +66,14 @@ export default class ScorePage extends Pagination {
     return this.body;
   }
 
+  getWins() {
+    return this.headWins;
+  }
+
+  getTime() {
+    return this.headTime;
+  }
+
   createWinner(data: WinnersData, car: CarData): void {
     this.body.append(new TableRow(data, car));
   }

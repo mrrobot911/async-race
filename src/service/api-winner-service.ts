@@ -25,7 +25,7 @@ export default class ApiWinnerService {
         {
           method,
           headers: { 'Content-type': 'application/json' },
-          body: JSON.stringify(value),
+          body: method !== 'GET' ? JSON.stringify(value) : undefined,
         }
       );
       if (!response.ok) {

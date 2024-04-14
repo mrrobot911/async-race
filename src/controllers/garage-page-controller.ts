@@ -143,11 +143,17 @@ export default class GarageController implements PageController {
 
       Promise.race(racePromises).then((result) => {
         this.view.append(new Modal(this.view.getNode(), 'modal', result));
-        const winnerData = this.winnerServise
-          .managWinners('PUT', {
+        this.winnerServise
+          .managWinners('GET', {
             id: result.id,
-            time: result.time,
           })
+          .then((resp) =>
+            this.winnerServise.managWinners('PUT', {
+              id: result.id,
+              time: resp.time < result.time ? resp.time : result.time,
+              wins: resp.wins + 1,
+            })
+          )
           .catch(() => {
             this.winnerServise.managWinners('POST', {
               id: result.id,
@@ -155,7 +161,6 @@ export default class GarageController implements PageController {
               wins: 1,
             });
           });
-        winnerData.then();
       });
     });
   }
@@ -196,7 +201,7 @@ export default class GarageController implements PageController {
     });
   }
 
-  toggleDisabledPagination() {
+  private toggleDisabledPagination() {
     if (this.page === 1) {
       if (Math.ceil(this.limit / this.limitPerPage) === 1) {
         this.view.toggleDisabled('all');
@@ -210,14 +215,14 @@ export default class GarageController implements PageController {
     }
   }
 
-  addListenerOnPrevButton() {
+  private addListenerOnPrevButton() {
     this.view.getPrevPage().addListener('click', () => {
       if (this.page !== 1) this.page -= 1;
       this.render();
     });
   }
 
-  addListenerOnNextButton() {
+  private addListenerOnNextButton() {
     this.view.getNextPage().addListener('click', () => {
       if (this.page !== Math.ceil(this.limit / this.limitPerPage))
         this.page += 1;
@@ -225,7 +230,7 @@ export default class GarageController implements PageController {
     });
   }
 
-  CreateCar(car: CarData) {
+  private CreateCar(car: CarData) {
     const carEl = new CarController(this.view.getGarage(), car);
     this.carControllers.push(carEl);
     carEl
