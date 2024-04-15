@@ -59,7 +59,7 @@ export default class ScoreController implements PageController {
       });
   }
 
-  toggleDisabledPagination() {
+  private toggleDisabledPagination() {
     if (this.page === 0) {
       if (Math.ceil(this.limit / this.limitPerPage) === 1) {
         this.view.toggleDisabled('all');

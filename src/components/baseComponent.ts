@@ -46,17 +46,6 @@ export default class BaseComponent<
     }
   }
 
-  public prepend(
-    child: BaseComponent<keyof HTMLElementTagNameMap> | HTMLElement
-  ): void {
-    if (child instanceof BaseComponent) {
-      this.children.push(child);
-      this.node.prepend(child.getNode());
-    } else {
-      this.node.prepend(child);
-    }
-  }
-
   public appendChildren(
     children: (BaseComponent<keyof HTMLElementTagNameMap> | HTMLElement)[]
   ): void {
@@ -91,16 +80,6 @@ export default class BaseComponent<
 
   public removeAttribute(attribute: string): void {
     this.node.removeAttribute(attribute);
-  }
-
-  public toggleClass(className: string): void {
-    this.node.classList.toggle(className);
-  }
-
-  public setClasses(className: string): void {
-    className.split(' ').forEach((name) => {
-      this.addClass(name);
-    });
   }
 
   public setClassname(className: string): void {

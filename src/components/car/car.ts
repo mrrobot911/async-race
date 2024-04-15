@@ -93,14 +93,14 @@ export default class Car extends BaseComponent<'div'> {
     return this.flag;
   }
 
-  startButtonListener() {
+  private startButtonListener() {
     this.startRace.addListener('click', () => {
       this.startRace.setAttribute('disabled', 'true');
       this.stopRace.removeAttribute('disabled');
     });
   }
 
-  stopButtonListener() {
+  private stopButtonListener() {
     this.stopRace.addListener('click', () => {
       this.stopRace.setAttribute('disabled', 'true');
       this.startRace.removeAttribute('disabled');

@@ -29,7 +29,7 @@ export default class CarController {
     window.addEventListener('resize', () => this.updateSize());
   }
 
-  updateSize() {
+  private updateSize() {
     this.size = this.car.getNode().clientWidth;
     this.car.getCarFlag().setAttribute('style', `left: ${this.size - 250}px`);
     this.car
@@ -52,13 +52,13 @@ export default class CarController {
     return this.car;
   }
 
-  addListenerToStartBtn() {
+  private addListenerToStartBtn() {
     this.car.getStartCarButton().addListener('click', () => {
       this.race();
     });
   }
 
-  race() {
+  private race() {
     this.raceService.engineManager(this.carData.id, 'started').then((resp) => {
       this.interval = resp.distance / resp.velocity;
       this.timer = setInterval(() => {
@@ -112,7 +112,7 @@ export default class CarController {
     });
   }
 
-  clearSittings() {
+  private clearSittings() {
     clearInterval(this.timer);
     this.distance = 1;
     this.interval = 0;
@@ -123,7 +123,7 @@ export default class CarController {
     this.car.getCarImg().removeAttribute('style');
   }
 
-  addListenerToStopBtn() {
+  private addListenerToStopBtn() {
     this.car.getStopCarButton().addListener('click', () => {
       this.raceService.engineManager(this.carData.id, 'stopped').then(() => {
         this.resetCar();

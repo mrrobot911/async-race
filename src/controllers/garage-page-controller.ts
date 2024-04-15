@@ -87,7 +87,7 @@ export default class GarageController implements PageController {
       .forEach((car) => car.renderCar());
   }
 
-  addListenerToRegForm() {
+  private addListenerToRegForm() {
     this.view
       .getRegForm()
       .returnButtonElement()
@@ -106,7 +106,7 @@ export default class GarageController implements PageController {
       });
   }
 
-  addListenerToEditeForm() {
+  private addListenerToEditeForm() {
     this.view
       .getRenameForm()
       .returnButtonElement()
@@ -130,7 +130,7 @@ export default class GarageController implements PageController {
       });
   }
 
-  addListenerStartRace() {
+  private addListenerStartRace() {
     this.view.getStartRaceBtn().addListener('click', () => {
       const startIndex = (this.page - 1) * this.limitPerPage;
       const endIndex = Math.min(
@@ -165,7 +165,7 @@ export default class GarageController implements PageController {
     });
   }
 
-  addListenerStopRace() {
+  private addListenerStopRace() {
     this.view.getStopRaceBtn().addListener('click', () => {
       const startIndex = (this.page - 1) * this.limitPerPage;
       const endIndex = Math.min(
@@ -180,7 +180,7 @@ export default class GarageController implements PageController {
     });
   }
 
-  addListenerGenerateCarButton() {
+  private addListenerGenerateCarButton() {
     this.view.getGenerateCarBtn().addListener('click', () => {
       const promises = [];
       for (let i = 0; i < 100; i += 1) {

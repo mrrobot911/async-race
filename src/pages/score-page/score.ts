@@ -12,6 +12,10 @@ export default class ScorePage extends Pagination {
 
   private readonly headRow: BaseComponent<'tr'>;
 
+  private timeToggle = true;
+
+  private winsToggle = true;
+
   private readonly headName: BaseComponent<'th'> = new BaseComponent({
     tag: 'th',
     content: 'name',
@@ -25,11 +29,13 @@ export default class ScorePage extends Pagination {
   private readonly headWins: BaseComponent<'th'> = new BaseComponent({
     tag: 'th',
     content: 'wins',
+    className: 'sort-items',
   });
 
   private readonly headTime: BaseComponent<'th'> = new BaseComponent({
     tag: 'th',
     content: 'time',
+    className: 'sort-items',
   });
 
   private readonly body: BaseComponent<'tbody'>;
@@ -60,6 +66,32 @@ export default class ScorePage extends Pagination {
       this.getNextPage(),
     ]);
     this.append(this.getPagination());
+    this.addListenerToToggleTime();
+    this.addListenerToToggleWinner();
+  }
+
+  private addListenerToToggleTime() {
+    this.headTime.addListener('click', () => {
+      this.headWins.setClassname('sort-items');
+      if (this.timeToggle) {
+        this.headTime.setClassname('sort-items sorted-asc');
+      } else {
+        this.headTime.setClassname('sort-items sorted-desc');
+      }
+      this.timeToggle = !this.timeToggle;
+    });
+  }
+
+  private addListenerToToggleWinner() {
+    this.headWins.addListener('click', () => {
+      this.headTime.setClassname('sort-items');
+      if (this.winsToggle) {
+        this.headWins.setClassname('sort-items sorted-asc');
+      } else {
+        this.headWins.setClassname('sort-items sorted-desc');
+      }
+      this.winsToggle = !this.winsToggle;
+    });
   }
 
   getRows() {

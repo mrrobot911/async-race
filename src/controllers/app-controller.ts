@@ -27,14 +27,14 @@ export default class Controller extends BaseComponent {
     this.append(this.appRoot);
   }
 
-  addGarageListener() {
+  private addGarageListener() {
     this.header.getGarage().addListener('click', () => {
       this.garage.createPage();
       this.score.removePage();
     });
   }
 
-  addScoreListener() {
+  private addScoreListener() {
     this.header.getScore().addListener('click', () => {
       this.garage.removePage();
       this.score.createPage();

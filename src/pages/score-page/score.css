@@ -26,3 +26,17 @@ td {
 td:last-of-type {
   text-align: center;
 }
+
+.sort-items {
+  cursor: pointer;
+}
+
+.sorted-asc::after {
+  content: '\25B2';
+  opacity: 1;
+}
+
+.sorted-desc::after {
+  content: '\25BC';
+  opacity: 1;
+}

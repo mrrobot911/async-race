@@ -1,4 +1,5 @@
 import BaseComponent from '../baseComponent';
+import './button.css';
 
 export default class Button extends BaseComponent<'button'> {
   constructor(
